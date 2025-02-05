@@ -48,6 +48,7 @@
     setSetting(selfUnmuteCommandsKey, selfUnmuteCommandsInput.value);
     setSetting(selfMuteCommandsKey, selfMuteCommandsInput.value);
     muteSettingsModal.style.display = 'none';
+    updateMuteSettingsButton();
   });
   
   closeMuteSettingsBtn.addEventListener('click', () => {
@@ -60,4 +61,20 @@
       muteSettingsModal.style.display = 'none';
     }
   });
+
+  // Update the Mute Settings button's appearance based on whether self mute is allowed or not.
+  function updateMuteSettingsButton() {
+    if (!muteSettingsBtn) return;
+    const allowSelfMute = localStorage.getItem(allowSelfMuteKey) === 'true';
+    if (allowSelfMute) {
+      muteSettingsBtn.classList.remove('off');
+      muteSettingsBtn.style.backgroundColor = '';
+    } else {
+      muteSettingsBtn.classList.add('off');
+      muteSettingsBtn.style.backgroundColor = '#6c757d';
+    }
+  }
+  
+  // Ensure the button is updated on page load.
+  updateMuteSettingsButton();
 })();
