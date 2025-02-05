@@ -14,6 +14,11 @@
   const gambleTriggersInput = document.getElementById('gamble-triggers');
   const saveGambleSettingsBtn = document.getElementById('save-gamble-settings');
   const restoreGambleDefaultsBtn = document.getElementById('restore-gamble-defaults');
+  const unsavedWarning = document.getElementById('gamble-unsaved-warning');
+
+  // Variables to track unsaved changes
+  let initialGambleSettings = {};
+  let unsavedPrompted = false;
 
   // Helper: Update Gamble Settings button style based on enabled status
   function updateGambleSettingsButton() {
@@ -27,18 +32,83 @@
     }
   }
 
-  // Set initial values
-  if (gambleCooldownInput) {
-    gambleCooldownInput.value = gambleState.cooldown;
+  // Set initial values in the modal based on stored settings
+  function loadGambleSettingsIntoModal() {
+    if (gambleCooldownInput) {
+      gambleCooldownInput.value = gambleState.cooldown;
+    }
+    if (gambleEnabledCheckbox) {
+      gambleEnabledCheckbox.checked = gambleState.enabled;
+    }
+    if (gambleTriggersInput) {
+      gambleTriggersInput.value = gambleTriggers.join(', ');
+    }
+    // Record initial state for later comparison
+    initialGambleSettings = {
+      cooldown: gambleCooldownInput.value,
+      enabled: gambleEnabledCheckbox.checked,
+      triggers: gambleTriggersInput.value
+    };
+    unsavedPrompted = false;
+    unsavedWarning.style.display = 'none';
   }
-  if (gambleEnabledCheckbox) {
-    gambleEnabledCheckbox.checked = gambleState.enabled;
+
+  // Compare current modal values with initial values
+  function hasUnsavedChanges() {
+    return (
+      gambleCooldownInput.value !== initialGambleSettings.cooldown ||
+      gambleEnabledCheckbox.checked !== initialGambleSettings.enabled ||
+      gambleTriggersInput.value !== initialGambleSettings.triggers
+    );
   }
-  if (gambleTriggersInput) {
+
+  // Open modal and load settings
+  gambleSettingsBtn.addEventListener('click', function() {
+    loadGambleSettingsIntoModal();
+    gambleSettingsModal.style.display = 'block';
+  });
+
+  // Save settings from modal
+  saveGambleSettingsBtn.addEventListener('click', function() {
+    gambleState.cooldown = parseInt(gambleCooldownInput.value) || 0;
+    gambleState.enabled = gambleEnabledCheckbox.checked;
+    gambleTriggers = gambleTriggersInput.value.split(',').map(trigger => trigger.trim()).filter(trigger => trigger);
+    localStorage.setItem('gambleCooldown', gambleState.cooldown);
+    localStorage.setItem('gambleEnabled', gambleState.enabled);
+    localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
+    gambleSettingsModal.style.display = 'none';
+    updateGambleSettingsButton();
+  });
+
+  // Restore default triggers for gamble settings
+  restoreGambleDefaultsBtn.addEventListener('click', function() {
+    gambleTriggers = [...defaultGambleTriggers];
     gambleTriggersInput.value = gambleTriggers.join(', ');
-  }
-  // Initial update for Gamble Settings button style based on gambleEnabled checkbox state.
-  updateGambleSettingsButton();
+    localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
+  });
+
+  // Enhanced modal close behavior: clicking outside the modal content
+  window.addEventListener('click', function(e) {
+    if (e.target === gambleSettingsModal) {
+      if (hasUnsavedChanges()) {
+        if (!unsavedPrompted) {
+          unsavedWarning.textContent = "You have unsaved changes. Click 'Save Settings' to save or click outside again to cancel changes.";
+          unsavedWarning.style.display = 'block';
+          unsavedPrompted = true;
+        } else {
+          // Revert the unsaved changes by resetting modal values to initial state
+          gambleCooldownInput.value = initialGambleSettings.cooldown;
+          gambleEnabledCheckbox.checked = initialGambleSettings.enabled;
+          gambleTriggersInput.value = initialGambleSettings.triggers;
+          unsavedWarning.style.display = 'none';
+          unsavedPrompted = false;
+          gambleSettingsModal.style.display = 'none';
+        }
+      } else {
+        gambleSettingsModal.style.display = 'none';
+      }
+    }
+  });
 
   function isGambleTrigger(message) {
     return gambleTriggers.some(trigger => message.startsWith(trigger.toLowerCase()));
@@ -84,40 +154,6 @@
       window.ttsManager.queueTTSMessage(additionalText, username);
     }
     return true;
-  }
-
-  // Gamble Settings Modal Event Listeners
-  if (gambleSettingsBtn) {
-    gambleSettingsBtn.addEventListener('click', function() {
-      gambleSettingsModal.style.display = 'block';
-    });
-  }
-
-  window.addEventListener('click', function(e) {
-    if (e.target === gambleSettingsModal) {
-      gambleSettingsModal.style.display = 'none';
-    }
-  });
-
-  if (saveGambleSettingsBtn) {
-    saveGambleSettingsBtn.addEventListener('click', function() {
-      gambleState.cooldown = parseInt(gambleCooldownInput.value) || 0;
-      gambleState.enabled = gambleEnabledCheckbox.checked;
-      gambleTriggers = gambleTriggersInput.value.split(',').map(trigger => trigger.trim()).filter(trigger => trigger);
-      localStorage.setItem('gambleCooldown', gambleState.cooldown);
-      localStorage.setItem('gambleEnabled', gambleState.enabled);
-      localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
-      gambleSettingsModal.style.display = 'none';
-      updateGambleSettingsButton();
-    });
-  }
-
-  if (restoreGambleDefaultsBtn) {
-    restoreGambleDefaultsBtn.addEventListener('click', function() {
-      gambleTriggers = [...defaultGambleTriggers];
-      gambleTriggersInput.value = gambleTriggers.join(', ');
-      localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
-    });
   }
 
   window.gambleManager = {
