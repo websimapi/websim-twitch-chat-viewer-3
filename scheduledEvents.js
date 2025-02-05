@@ -2,21 +2,18 @@
   const localStorageKey = 'scheduledEvents';
   let scheduledEvents = [];
 
-  // Unit multipliers (in milliseconds)
   const unitMultipliers = {
     Minutes: 60000,
     Hours: 3600000,
     Days: 86400000,
     Weeks: 604800000,
-    Months: 2592000000, // approximate (30 days)
+    Months: 2592000000,
     Years: 31536000000
   };
 
-  // Variables to track unsaved changes for Scheduled Events modal
   let unsavedScheduledChanges = false;
   let unsavedPromptedScheduled = false;
 
-  // Load scheduled events from localStorage
   function loadScheduledEvents() {
     const stored = localStorage.getItem(localStorageKey);
     if (stored) {
@@ -29,14 +26,12 @@
     }
   }
 
-  // Save scheduled events to localStorage
   function saveScheduledEvents() {
     localStorage.setItem(localStorageKey, JSON.stringify(scheduledEvents));
     unsavedScheduledChanges = false;
     unsavedPromptedScheduled = false;
   }
 
-  // Helper: Format timestamp (ms) to "YYYY-MM-DDTHH:mm" for input[type="datetime-local"]
   function formatTimestampForInput(ts) {
     const d = new Date(ts);
     const pad = n => n.toString().padStart(2, '0');
@@ -48,12 +43,10 @@
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
-  // Helper: Parse datetime-local input value to timestamp (ms)
   function parseInputToTimestamp(val) {
     return new Date(val).getTime();
   }
 
-  // Trigger the scheduled event based on type
   function triggerEvent(event) {
     if (event.type === 'tts' && event.message) {
       window.ttsManager.queueCustomTTSMessage(event.message, event.voice || '', 'Scheduled');
@@ -62,7 +55,6 @@
     }
   }
 
-  // Create or update the Scheduled Events UI inside the modal
   function populateScheduledEventsUI() {
     const listDiv = document.getElementById('scheduled-events-list');
     listDiv.innerHTML = '';
@@ -76,7 +68,6 @@
       const container = document.createElement('div');
       container.className = 'scheduled-event-item';
 
-      // Type selection (TTS or Sound)
       const typeSelect = document.createElement('select');
       typeSelect.innerHTML = `
         <option value="tts" ${event.type === 'tts' ? 'selected' : ''}>TTS</option>
@@ -84,8 +75,9 @@
       `;
       typeSelect.addEventListener('change', (e) => {
         event.type = e.target.value;
-        // Toggle visibility of TTS vs Sound specific inputs
+        const ttsDetails = container.querySelector('div');
         ttsDetails.style.display = event.type === 'tts' ? 'block' : 'none';
+        const soundDetails = container.querySelector('div:nth-child(5)');
         soundDetails.style.display = event.type === 'sound' ? 'block' : 'none';
         unsavedScheduledChanges = true;
       });
@@ -93,7 +85,6 @@
       container.appendChild(typeSelect);
       container.appendChild(document.createElement('br'));
 
-      // Scheduled Time input
       const timeLabel = document.createElement('label');
       timeLabel.textContent = 'Scheduled Time: ';
       const timeInput = document.createElement('input');
@@ -107,7 +98,6 @@
       container.appendChild(timeLabel);
       container.appendChild(document.createElement('br'));
 
-      // Repeat interval: numeric input + unit dropdown.
       const repeatLabel = document.createElement('label');
       repeatLabel.textContent = 'Repeat Interval (leave empty for one-time): ';
       const repeatNumber = document.createElement('input');
@@ -144,10 +134,8 @@
       container.appendChild(repeatLabel);
       container.appendChild(document.createElement('br'));
 
-      // Container for TTS Details
       const ttsDetails = document.createElement('div');
       ttsDetails.style.display = event.type === 'tts' ? 'block' : 'none';
-      // TTS Message Input
       const messageLabel = document.createElement('label');
       messageLabel.textContent = 'TTS Message: ';
       const messageInput = document.createElement('input');
@@ -161,7 +149,6 @@
       messageLabel.appendChild(messageInput);
       ttsDetails.appendChild(messageLabel);
       ttsDetails.appendChild(document.createElement('br'));
-      // Voice selection for TTS
       const voiceLabel = document.createElement('label');
       voiceLabel.textContent = 'Voice: ';
       const voiceSelect = document.createElement('select');
@@ -179,10 +166,8 @@
       ttsDetails.appendChild(voiceLabel);
       container.appendChild(ttsDetails);
 
-      // Container for Sound Details
       const soundDetails = document.createElement('div');
       soundDetails.style.display = event.type === 'sound' ? 'block' : 'none';
-      // Audio file display and input
       const audioLabel = document.createElement('span');
       audioLabel.style.fontSize = '0.9em';
       audioLabel.textContent = event.audioFileName ? event.audioFileName : (event.audioData ? 'File loaded' : 'No file');
@@ -210,7 +195,6 @@
       soundDetails.appendChild(fileInput);
       container.appendChild(soundDetails);
 
-      // Delete button for this event
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = 'Delete';
       deleteBtn.addEventListener('click', () => {
@@ -225,12 +209,11 @@
     });
   }
 
-  // Function to add a new scheduled event with default values
   function addNewScheduledEvent() {
     const newEvent = {
-      id: Date.now() + Math.random(), // Simple unique id
+      id: Date.now() + Math.random(),
       type: 'tts',
-      scheduledTime: Date.now() + 5 * 60000, // Default: 5 minutes from now
+      scheduledTime: Date.now() + 5 * 60000,
       repeatInterval: 0,
       message: '',
       voice: (window.speechSynthesis.getVoices()[0] || {}).name || '',
@@ -243,18 +226,14 @@
     unsavedScheduledChanges = true;
   }
 
-  // Periodically check for due scheduled events (every second)
   function checkAndExecuteScheduledEvents() {
     const now = Date.now();
     let modified = false;
-    // Traverse backwards to handle removals safely
     for (let i = scheduledEvents.length - 1; i >= 0; i--) {
       const event = scheduledEvents[i];
       if (now >= event.scheduledTime) {
-        // Trigger the event now
         triggerEvent(event);
         if (event.repeatInterval && event.repeatInterval > 0) {
-          // Calculate next scheduled time without triggering missed intervals
           let nextTime = event.scheduledTime + event.repeatInterval;
           while (nextTime < now) {
             nextTime += event.repeatInterval;
@@ -262,7 +241,6 @@
           event.scheduledTime = nextTime;
           modified = true;
         } else {
-          // One-time event; remove it
           scheduledEvents.splice(i, 1);
           modified = true;
         }
@@ -275,7 +253,6 @@
   }
   setInterval(checkAndExecuteScheduledEvents, 1000);
 
-  // Setup Modal Event Listeners for Scheduled Events
   document.getElementById('scheduled-events-btn').addEventListener('click', () => {
     loadScheduledEvents();
     populateScheduledEventsUI();
@@ -301,7 +278,6 @@
         warningDiv.style.display = 'block';
         unsavedPromptedScheduled = true;
       } else {
-        // Revert unsaved changes by reloading stored events
         loadScheduledEvents();
         populateScheduledEventsUI();
         unsavedScheduledChanges = false;
@@ -314,7 +290,6 @@
     }
   });
 
-  // Clicking outside the Scheduled Events modal content triggers safe warning
   window.addEventListener('click', (e) => {
     const modal = document.getElementById('scheduled-events-modal');
     if (e.target === modal) {
@@ -325,7 +300,6 @@
           warningDiv.style.display = 'block';
           unsavedPromptedScheduled = true;
         } else {
-          // Revert unsaved changes and then close
           loadScheduledEvents();
           populateScheduledEventsUI();
           unsavedScheduledChanges = false;
@@ -346,6 +320,5 @@
     getEvents: () => scheduledEvents
   };
 
-  // Initialize scheduled events on load.
   loadScheduledEvents();
 })();

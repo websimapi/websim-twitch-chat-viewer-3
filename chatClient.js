@@ -24,7 +24,6 @@
       alert('Please enter a channel name');
       return;
     }
-    // Save the channel to localStorage for future use
     localStorage.setItem('lastConnectedChannel', channel);
     client = new window.tmi.Client({
       connection: {
@@ -75,7 +74,6 @@
     }
   }
 
-  // On page load, load the last connected channel name into the input (do not auto-connect)
   window.addEventListener('DOMContentLoaded', function() {
     const lastChannel = localStorage.getItem('lastConnectedChannel');
     if (lastChannel) {

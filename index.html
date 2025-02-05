@@ -316,7 +316,6 @@
       font-weight: bold;
       margin-right: 8px;
     }
-    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -376,7 +375,6 @@
     .restore-btn:hover {
       background: #e0a800;
     }
-    /* Custom Commands Modal Specific - Updated for a more compact UI */
     .custom-command-item {
       display: flex;
       align-items: center;
@@ -409,7 +407,6 @@
     .add-custom-command-btn:hover {
       background: #218838;
     }
-    /* Scheduled Events Modal Specific */
     .scheduled-event-item {
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -469,7 +466,6 @@
         <button id="scheduled-events-btn" class="control-btn add-btn">Scheduled Events</button>
         <button id="export-import-settings-btn" class="control-btn add-btn">Export/Import Settings</button>
       </div>
-      <!-- Gamble Settings Modal -->
       <div id="gamble-settings-modal" class="modal">
         <div class="modal-content">
           <h4>Gamble Voice Settings</h4>
@@ -494,15 +490,12 @@
           </div>
         </div>
       </div>
-      <!-- Custom Commands Modal -->
       <div id="custom-commands-modal" class="modal">
         <div class="modal-content">
           <h4 class="custom-command-header">Custom Commands</h4>
           <button id="add-custom-command-btn" class="add-custom-command-btn">Add New Command</button>
           <form id="custom-commands-form">
-            <div id="custom-commands-list">
-              <!-- Custom command items will be dynamically populated here -->
-            </div>
+            <div id="custom-commands-list"></div>
             <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end;">
               <button type="button" id="save-custom-commands" class="control-btn add-btn">Save Commands</button>
               <button type="button" id="close-custom-commands" class="control-btn clear-btn">Close</button>
@@ -510,22 +503,18 @@
           </form>
         </div>
       </div>
-      <!-- Scheduled Events Modal -->
       <div id="scheduled-events-modal" class="modal">
         <div class="modal-content">
           <h4>Scheduled Events</h4>
           <div id="scheduled-unsaved-warning" style="display:none; color:red; text-align:center; margin-bottom:10px;"></div>
           <button id="add-scheduled-event-btn" class="add-scheduled-event-btn">Add New Event</button>
-          <div id="scheduled-events-list">
-            <!-- Scheduled event items will be dynamically populated here -->
-          </div>
+          <div id="scheduled-events-list"></div>
           <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end;">
             <button type="button" id="save-scheduled-events" class="control-btn add-btn">Save Events</button>
             <button type="button" id="close-scheduled-events" class="control-btn clear-btn">Close</button>
           </div>
         </div>
       </div>
-      <!-- Export/Import Settings Modal -->
       <div id="export-import-modal" class="modal">
         <div class="modal-content">
           <h4>Export / Import Settings</h4>
@@ -542,9 +531,7 @@
       </div>
       <form id="tts-add-form">
         <input type="text" id="tts-username" placeholder="Enter username for TTS">
-        <select id="tts-voice-select">
-          <!-- Will be populated with available voices -->
-        </select>
+        <select id="tts-voice-select"></select>
         <button type="submit" class="control-btn add-btn">Add User</button>
       </form>
       <div class="tts-user-list" id="tts-users"></div>

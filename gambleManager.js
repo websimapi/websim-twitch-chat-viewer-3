@@ -72,7 +72,9 @@
   saveGambleSettingsBtn.addEventListener('click', function() {
     gambleState.cooldown = parseInt(gambleCooldownInput.value) || 0;
     gambleState.enabled = gambleEnabledCheckbox.checked;
-    gambleTriggers = gambleTriggersInput.value.split(',').map(trigger => trigger.trim()).filter.trigger => trigger);
+    gambleTriggers = gambleTriggersInput.value.split(',')
+      .map(trigger => trigger.trim())
+      .filter(trigger => trigger);
     localStorage.setItem('gambleCooldown', gambleState.cooldown);
     localStorage.setItem('gambleEnabled', gambleState.enabled);
     localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));

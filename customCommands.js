@@ -111,7 +111,6 @@
       const ttsVoiceSelect = document.createElement('select');
       ttsVoiceSelect.style.fontSize = '0.9em';
       ttsVoiceSelect.style.padding = '4px';
-      // Populate voices from window.speechSynthesis if available
       let voices = window.speechSynthesis.getVoices();
       if (!voices.length) {
         ttsVoiceSelect.innerHTML = `<option>Loading voices...</option>`;
@@ -133,7 +132,6 @@
 
       const audioLabel = document.createElement('span');
       audioLabel.style.fontSize = '0.9em';
-      // Show current file name if available, otherwise a default message
       audioLabel.textContent = cmd.audioFileName ? cmd.audioFileName : (cmd.audioData ? 'File loaded' : 'No file');
       audioContainer.appendChild(audioLabel);
 
@@ -147,7 +145,6 @@
           const reader = new FileReader();
           reader.onload = function(ev) {
             const result = ev.target.result;
-            // If the base64 string is too large, split it into chunks
             if(result.length > CHUNK_SIZE) {
               let chunks = [];
               for(let i = 0; i < result.length; i += CHUNK_SIZE) {
@@ -157,12 +154,9 @@
             } else {
               cmd.audioData = result;
             }
-            // Store the file name for display purposes
             cmd.audioFileName = file.name;
             audioLabel.textContent = file.name;
-            // Prepare the audio for immediate use by preloading it
-            const audioSrc = Array.isArray(cmd.audioData) ? cmd.audioData.join('') : cmd.audioData;
-            const audio = new Audio(audioSrc);
+            const audio = new Audio(Array.isArray(cmd.audioData) ? cmd.audioData.join('') : cmd.audioData);
             audio.load();
             cmd.preloadedAudio = audio;
           };
@@ -222,28 +216,23 @@
     populateCustomCommandsUI();
   }
 
-  // Event listener for Add New Command button
   document.getElementById('add-custom-command-btn').addEventListener('click', () => {
     addNewCommand();
   });
 
-  // Event listener for Save Commands button
   document.getElementById('save-custom-commands').addEventListener('click', () => {
     saveCommands();
     alert('Custom commands saved.');
   });
 
-  // Modal close for Custom Commands Modal: clicking the "Close" button
   document.getElementById('close-custom-commands').addEventListener('click', () => {
     document.getElementById('custom-commands-modal').style.display = 'none';
   });
 
-  // Modal open: clicking the Custom Commands button in the main UI should display the modal.
   document.getElementById('custom-commands-btn').addEventListener('click', () => {
     document.getElementById('custom-commands-modal').style.display = 'block';
   });
 
-  // Clicking outside modal-content closes the modal for Custom Commands Modal
   const customCommandsModal = document.getElementById('custom-commands-modal');
   window.addEventListener('click', (e) => {
     if (e.target === customCommandsModal) {
@@ -251,11 +240,9 @@
     }
   });
 
-  // Expose functions globally for external updates
   window.refreshCustomCommandsUI = populateCustomCommandsUI;
   window.loadCustomCommands = loadCommands;
 
-  // New function: Preload and prepare audio files for custom commands so sounds are ready to use
   function prepareCustomCommandAudioFiles() {
     commands.forEach((cmd) => {
       if (cmd.type === 'audio' && cmd.audioData) {

@@ -6,7 +6,6 @@
   const ttsFilterToggleButton = document.getElementById('tts-filter-toggle');
   const autoAddUserToggle = document.getElementById('auto-add-user-toggle');
 
-  // TTS State with localStorage support
   const ttsState = {
     enabled: localStorage.getItem('ttsEnabled') === 'false' ? false : true,
     filterEnabled: localStorage.getItem('ttsFilterEnabled') === 'false' ? false : true,
@@ -16,7 +15,6 @@
     currentUtterance: null
   };
 
-  // Muted users for TTS and helper to save in localStorage
   let mutedUsers = new Set(JSON.parse(localStorage.getItem('mutedUsers') || '[]'));
   function saveMutedUsers() {
     localStorage.setItem('mutedUsers', JSON.stringify(Array.from(mutedUsers)));
@@ -283,7 +281,6 @@
     updateTTSUsersList();
   }
 
-  // Reset TTS if it gets stuck
   setInterval(function() {
     if (ttsState.speaking && !tts.speaking) {
       console.log("Detected stuck TTS state, resetting...");
@@ -299,7 +296,6 @@
   populateVoiceList();
   loadTTSState();
 
-  // Event Listeners for TTS controls
   if (ttsToggleButton) {
     ttsToggleButton.addEventListener('click', function() {
       ttsState.enabled = !ttsState.enabled;
