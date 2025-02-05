@@ -82,6 +82,11 @@
         if (window.ttsManager && window.ttsManager.loadTTSState) {
           window.ttsManager.loadTTSState();
         }
+        // NEW: Reload Scheduled Events settings and update UI so that scheduled events are imported properly.
+        if (window.scheduledEvents && window.scheduledEvents.load && window.scheduledEvents.populateUI) {
+          window.scheduledEvents.load();
+          window.scheduledEvents.populateUI();
+        }
         alert('Settings imported successfully.');
       } catch (err) {
         alert('Failed to import settings: Invalid JSON.');
