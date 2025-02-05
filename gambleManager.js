@@ -7,6 +7,39 @@
   };
   let gambleTriggers = JSON.parse(localStorage.getItem('gambleTriggers') || JSON.stringify(defaultGambleTriggers));
 
+  const gambleSettingsBtn = document.getElementById('gamble-settings-btn');
+  const gambleSettingsModal = document.getElementById('gamble-settings-modal');
+  const gambleCooldownInput = document.getElementById('gamble-cooldown');
+  const gambleEnabledCheckbox = document.getElementById('gamble-enabled');
+  const gambleTriggersInput = document.getElementById('gamble-triggers');
+  const saveGambleSettingsBtn = document.getElementById('save-gamble-settings');
+  const restoreGambleDefaultsBtn = document.getElementById('restore-gamble-defaults');
+
+  // Helper: Update Gamble Settings button style based on enabled status
+  function updateGambleSettingsButton() {
+    if (!gambleSettingsBtn || !gambleEnabledCheckbox) return;
+    if (gambleEnabledCheckbox.checked) {
+      gambleSettingsBtn.classList.remove('off');
+      gambleSettingsBtn.style.backgroundColor = '';
+    } else {
+      gambleSettingsBtn.classList.add('off');
+      gambleSettingsBtn.style.backgroundColor = '#6c757d';
+    }
+  }
+
+  // Set initial values
+  if (gambleCooldownInput) {
+    gambleCooldownInput.value = gambleState.cooldown;
+  }
+  if (gambleEnabledCheckbox) {
+    gambleEnabledCheckbox.checked = gambleState.enabled;
+  }
+  if (gambleTriggersInput) {
+    gambleTriggersInput.value = gambleTriggers.join(', ');
+  }
+  // Initial update for Gamble Settings button style based on gambleEnabled checkbox state.
+  updateGambleSettingsButton();
+
   function isGambleTrigger(message) {
     return gambleTriggers.some(trigger => message.startsWith(trigger.toLowerCase()));
   }
@@ -54,24 +87,6 @@
   }
 
   // Gamble Settings Modal Event Listeners
-  const gambleSettingsBtn = document.getElementById('gamble-settings-btn');
-  const gambleSettingsModal = document.getElementById('gamble-settings-modal');
-  const gambleCooldownInput = document.getElementById('gamble-cooldown');
-  const gambleEnabledCheckbox = document.getElementById('gamble-enabled');
-  const gambleTriggersInput = document.getElementById('gamble-triggers');
-  const saveGambleSettingsBtn = document.getElementById('save-gamble-settings');
-  const restoreGambleDefaultsBtn = document.getElementById('restore-gamble-defaults');
-
-  if (gambleCooldownInput) {
-    gambleCooldownInput.value = gambleState.cooldown;
-  }
-  if (gambleEnabledCheckbox) {
-    gambleEnabledCheckbox.checked = gambleState.enabled;
-  }
-  if (gambleTriggersInput) {
-    gambleTriggersInput.value = gambleTriggers.join(', ');
-  }
-
   if (gambleSettingsBtn) {
     gambleSettingsBtn.addEventListener('click', function() {
       gambleSettingsModal.style.display = 'block';
@@ -93,6 +108,7 @@
       localStorage.setItem('gambleEnabled', gambleState.enabled);
       localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
       gambleSettingsModal.style.display = 'none';
+      updateGambleSettingsButton();
     });
   }
 

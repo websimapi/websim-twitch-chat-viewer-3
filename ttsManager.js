@@ -47,7 +47,10 @@
       ttsFilterToggleButton.classList.toggle('off', !ttsState.filterEnabled);
     }
     if(autoAddUserToggle) {
-      autoAddUserToggle.textContent = (localStorage.getItem('autoAddUserEnabled') === 'false' ? 'Auto Add User: Off' : 'Auto Add User: On');
+      let autoAddUserEnabled = localStorage.getItem('autoAddUserEnabled');
+      autoAddUserEnabled = autoAddUserEnabled === null ? true : autoAddUserEnabled === 'true';
+      autoAddUserToggle.textContent = autoAddUserEnabled ? 'Auto Add User: On' : 'Auto Add User: Off';
+      autoAddUserToggle.classList.toggle('off', !autoAddUserEnabled);
     }
     updateTTSUsersList();
   }
@@ -138,7 +141,6 @@
   function queueTTSMessage(text, username) {
     username = username.toLowerCase();
     if (mutedUsers.has(username)) return;
-    // If the message starts with "!" and isn’t a gamble command, ignore it.
     if (text[0] === '!' && !(window.gambleManager && window.gambleManager.isGambleTrigger(text.toLowerCase()))) {
       return;
     }
@@ -341,6 +343,7 @@
       const newValue = !(current === 'false' ? false : true);
       localStorage.setItem('autoAddUserEnabled', newValue);
       this.textContent = newValue ? 'Auto Add User: On' : 'Auto Add User: Off';
+      this.classList.toggle('off', !newValue);
     });
   }
 
