@@ -12,6 +12,10 @@
     Years: 31536000000
   };
 
+  // Variables to track unsaved changes for Scheduled Events modal
+  let unsavedScheduledChanges = false;
+  let unsavedPromptedScheduled = false;
+
   // Load scheduled events from localStorage
   function loadScheduledEvents() {
     const stored = localStorage.getItem(localStorageKey);
@@ -28,6 +32,8 @@
   // Save scheduled events to localStorage
   function saveScheduledEvents() {
     localStorage.setItem(localStorageKey, JSON.stringify(scheduledEvents));
+    unsavedScheduledChanges = false;
+    unsavedPromptedScheduled = false;
   }
 
   // Helper: Format timestamp (ms) to "YYYY-MM-DDTHH:mm" for input[type="datetime-local"]
@@ -70,9 +76,6 @@
       const container = document.createElement('div');
       container.className = 'scheduled-event-item';
 
-      // Unique identifier for element IDs
-      const uid = event.id;
-
       // Type selection (TTS or Sound)
       const typeSelect = document.createElement('select');
       typeSelect.innerHTML = `
@@ -84,6 +87,7 @@
         // Toggle visibility of TTS vs Sound specific inputs
         ttsDetails.style.display = event.type === 'tts' ? 'block' : 'none';
         soundDetails.style.display = event.type === 'sound' ? 'block' : 'none';
+        unsavedScheduledChanges = true;
       });
       container.appendChild(document.createTextNode('Type: '));
       container.appendChild(typeSelect);
@@ -97,6 +101,7 @@
       timeInput.value = formatTimestampForInput(event.scheduledTime);
       timeInput.addEventListener('change', (e) => {
         event.scheduledTime = parseInputToTimestamp(e.target.value);
+        unsavedScheduledChanges = true;
       });
       timeLabel.appendChild(timeInput);
       container.appendChild(timeLabel);
@@ -121,6 +126,7 @@
           delete event.repeatValue;
           delete event.repeatUnit;
         }
+        unsavedScheduledChanges = true;
       });
       repeatLabel.appendChild(repeatNumber);
       const unitSelect = document.createElement('select');
@@ -132,6 +138,7 @@
           event.repeatValue = val;
           event.repeatUnit = e.target.value;
         }
+        unsavedScheduledChanges = true;
       });
       repeatLabel.appendChild(unitSelect);
       container.appendChild(repeatLabel);
@@ -149,6 +156,7 @@
       messageInput.value = event.message || '';
       messageInput.addEventListener('input', (e) => {
         event.message = e.target.value;
+        unsavedScheduledChanges = true;
       });
       messageLabel.appendChild(messageInput);
       ttsDetails.appendChild(messageLabel);
@@ -165,6 +173,7 @@
       }
       voiceSelect.addEventListener('change', (e) => {
         event.voice = e.target.value;
+        unsavedScheduledChanges = true;
       });
       voiceLabel.appendChild(voiceSelect);
       ttsDetails.appendChild(voiceLabel);
@@ -187,14 +196,13 @@
           const reader = new FileReader();
           reader.onload = function(ev) {
             const result = ev.target.result;
-            // Chunking logic (if needed) similar to custom commands (omitted here for brevity)
             event.audioData = result;
             event.audioFileName = file.name;
             audioLabel.textContent = file.name;
-            // Preload the audio so that it's ready immediately
             const audio = new Audio(result);
             audio.load();
             event.preloadedAudio = audio;
+            unsavedScheduledChanges = true;
           };
           reader.readAsDataURL(file);
         }
@@ -223,17 +231,16 @@
       id: Date.now() + Math.random(), // Simple unique id
       type: 'tts',
       scheduledTime: Date.now() + 5 * 60000, // Default: 5 minutes from now
-      // repeatInterval in milliseconds; if 0 or undefined, then non-repeating
       repeatInterval: 0,
-      // For TTS events
       message: '',
       voice: (window.speechSynthesis.getVoices()[0] || {}).name || '',
-      // For Sound events
       audioData: '',
       audioFileName: ''
     };
     scheduledEvents.push(newEvent);
     saveScheduledEvents();
+    populateScheduledEventsUI();
+    unsavedScheduledChanges = true;
   }
 
   // Periodically check for due scheduled events (every second)
@@ -247,9 +254,12 @@
         // Trigger the event now
         triggerEvent(event);
         if (event.repeatInterval && event.repeatInterval > 0) {
-          // Calculate how many intervals to skip so that scheduledTime is in the future
-          let intervalsMissed = Math.floor((now - event.scheduledTime) / event.repeatInterval) + 1;
-          event.scheduledTime += intervalsMissed * event.repeatInterval;
+          // Calculate next scheduled time without triggering missed intervals
+          let nextTime = event.scheduledTime + event.repeatInterval;
+          while (nextTime < now) {
+            nextTime += event.repeatInterval;
+          }
+          event.scheduledTime = nextTime;
           modified = true;
         } else {
           // One-time event; remove it
@@ -265,20 +275,17 @@
   }
   setInterval(checkAndExecuteScheduledEvents, 1000);
 
-  // Setup Modal Event Listeners
+  // Setup Modal Event Listeners for Scheduled Events
   document.getElementById('scheduled-events-btn').addEventListener('click', () => {
     loadScheduledEvents();
     populateScheduledEventsUI();
+    unsavedScheduledChanges = false;
+    unsavedPromptedScheduled = false;
     document.getElementById('scheduled-events-modal').style.display = 'block';
-  });
-
-  document.getElementById('close-scheduled-events').addEventListener('click', () => {
-    document.getElementById('scheduled-events-modal').style.display = 'none';
   });
 
   document.getElementById('add-scheduled-event-btn').addEventListener('click', () => {
     addNewScheduledEvent();
-    populateScheduledEventsUI();
   });
 
   document.getElementById('save-scheduled-events').addEventListener('click', () => {
@@ -286,11 +293,49 @@
     document.getElementById('scheduled-events-modal').style.display = 'none';
   });
 
-  // Clicking outside the Scheduled Events modal closes it
+  document.getElementById('close-scheduled-events').addEventListener('click', () => {
+    if (unsavedScheduledChanges) {
+      if (!unsavedPromptedScheduled) {
+        const warningDiv = document.getElementById('scheduled-unsaved-warning');
+        warningDiv.textContent = "You have unsaved changes. Click close again to cancel changes.";
+        warningDiv.style.display = 'block';
+        unsavedPromptedScheduled = true;
+      } else {
+        // Revert unsaved changes by reloading stored events
+        loadScheduledEvents();
+        populateScheduledEventsUI();
+        unsavedScheduledChanges = false;
+        unsavedPromptedScheduled = false;
+        document.getElementById('scheduled-unsaved-warning').style.display = 'none';
+        document.getElementById('scheduled-events-modal').style.display = 'none';
+      }
+    } else {
+      document.getElementById('scheduled-events-modal').style.display = 'none';
+    }
+  });
+
+  // Clicking outside the Scheduled Events modal content triggers safe warning
   window.addEventListener('click', (e) => {
     const modal = document.getElementById('scheduled-events-modal');
     if (e.target === modal) {
-      modal.style.display = 'none';
+      if (unsavedScheduledChanges) {
+        if (!unsavedPromptedScheduled) {
+          const warningDiv = document.getElementById('scheduled-unsaved-warning');
+          warningDiv.textContent = "You have unsaved changes. Click outside again to cancel.";
+          warningDiv.style.display = 'block';
+          unsavedPromptedScheduled = true;
+        } else {
+          // Revert unsaved changes and then close
+          loadScheduledEvents();
+          populateScheduledEventsUI();
+          unsavedScheduledChanges = false;
+          unsavedPromptedScheduled = false;
+          document.getElementById('scheduled-unsaved-warning').style.display = 'none';
+          modal.style.display = 'none';
+        }
+      } else {
+        modal.style.display = 'none';
+      }
     }
   });
 

@@ -16,7 +16,7 @@
   const restoreGambleDefaultsBtn = document.getElementById('restore-gamble-defaults');
   const unsavedWarning = document.getElementById('gamble-unsaved-warning');
 
-  // Variables to track unsaved changes
+  // Variables to track unsaved changes for gamble settings
   let initialGambleSettings = {};
   let unsavedPrompted = false;
 
@@ -72,7 +72,7 @@
   saveGambleSettingsBtn.addEventListener('click', function() {
     gambleState.cooldown = parseInt(gambleCooldownInput.value) || 0;
     gambleState.enabled = gambleEnabledCheckbox.checked;
-    gambleTriggers = gambleTriggersInput.value.split(',').map(trigger => trigger.trim()).filter(trigger => trigger);
+    gambleTriggers = gambleTriggersInput.value.split(',').map(trigger => trigger.trim()).filter.trigger => trigger);
     localStorage.setItem('gambleCooldown', gambleState.cooldown);
     localStorage.setItem('gambleEnabled', gambleState.enabled);
     localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
@@ -87,12 +87,12 @@
     localStorage.setItem('gambleTriggers', JSON.stringify(gambleTriggers));
   });
 
-  // Enhanced modal close behavior: clicking outside the modal content
+  // Enhanced modal close behavior: clicking outside the modal content for Gamble Settings
   window.addEventListener('click', function(e) {
     if (e.target === gambleSettingsModal) {
       if (hasUnsavedChanges()) {
         if (!unsavedPrompted) {
-          unsavedWarning.textContent = "You have unsaved changes.";
+          unsavedWarning.textContent = "You have unsaved changes. Click outside again to cancel.";
           unsavedWarning.style.display = 'block';
           unsavedPrompted = true;
         } else {
@@ -161,4 +161,7 @@
     handleGambleCommand: handleGambleCommand,
     isOnGambleCooldown: isOnGambleCooldown
   };
+
+  // Immediately update the Gamble Settings button based on stored value on page load
+  updateGambleSettingsButton();
 })();

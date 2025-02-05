@@ -8,7 +8,6 @@
       padding: 20px;
       background: #f0f0f0;
     }
-
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -18,7 +17,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       overflow: hidden;
     }
-
     #connect-form {
       margin-bottom: 20px;
       display: flex;
@@ -26,7 +24,6 @@
       align-items: center;
       flex-wrap: wrap;
     }
-
     #channel-input {
       padding: 8px;
       font-size: 16px;
@@ -36,7 +33,6 @@
       width: 100%;
       min-width: 0;
     }
-
     #connect-btn {
       padding: 8px 16px;
       font-size: 16px;
@@ -46,11 +42,9 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
     #connect-btn:hover {
       background: #7454B3;
     }
-
     #chat-box {
       height: 400px;
       margin-top: 20px;
@@ -60,32 +54,26 @@
       padding: 10px;
       background: #fff;
     }
-
     .chat-message {
       padding: 4px 0;
       word-wrap: break-word;
     }
-
     .username {
       font-weight: bold;
       color: #6441A4;
     }
-
     .username.clickable {
       cursor: pointer;
       text-decoration: underline;
     }
-
     .username.clickable:hover {
       color: #9147ff;
     }
-
     .timestamp {
       color: #666;
       font-size: 0.8em;
       margin-right: 5px;
     }
-
     .status {
       width: 100%;
       box-sizing: border-box;
@@ -93,17 +81,14 @@
       padding: 10px;
       border-radius: 4px;
     }
-
     .status.connected {
       background: #d4edda;
       color: #155724;
     }
-
     .status.disconnected {
       background: #f8d7da;
       color: #721c24;
     }
-
     .tts-controls {
       margin: 20px 0;
       padding: 20px;
@@ -112,27 +97,23 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       overflow: hidden;
     }
-
     .tts-controls h3 {
       margin-top: 0;
       margin-bottom: 15px;
       color: #333;
     }
-
     .tts-button-group {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-
     .tts-user-list {
       margin-top: 15px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 15px;
     }
-
     .tts-user {
       display: grid;
       grid-template-columns: auto 1fr auto auto;
@@ -145,7 +126,6 @@
       transition: all 0.2s ease;
       min-width: 0;
     }
-
     .tts-user span {
       white-space: nowrap;
       overflow: hidden;
@@ -153,7 +133,6 @@
       font-weight: 500;
       color: #333;
     }
-
     .tts-user select {
       width: 100%;
       min-width: 0;
@@ -162,7 +141,6 @@
       border-radius: 4px;
       font-size: 14px;
     }
-
     .tts-user button {
       padding: 4px 8px;
       background: #dc3545;
@@ -172,11 +150,9 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-
     .tts-user button:hover {
       background: #c82333;
     }
-
     #tts-add-form {
       display: grid;
       grid-template-columns: 1fr auto auto;
@@ -188,13 +164,11 @@
       border: 1px solid #e0e0e0;
       align-items: center;
     }
-
     @media (max-width: 600px) {
       #tts-add-form {
         grid-template-columns: 1fr;
       }
     }
-
     #tts-username {
       width: 100%;
       min-width: 0;
@@ -203,7 +177,6 @@
       border-radius: 4px;
       font-size: 14px;
     }
-
     #tts-voice-select {
       min-width: 200px;
       padding: 8px;
@@ -211,7 +184,6 @@
       border-radius: 4px;
       font-size: 14px;
     }
-
     .control-btn {
       padding: 8px 16px;
       font-size: 14px;
@@ -222,39 +194,31 @@
       transition: background 0.2s ease;
       white-space: nowrap;
     }
-
     .control-btn:hover {
       opacity: 0.9;
     }
-
     .add-btn {
       background: #28a745;
     }
-
     .clear-btn {
       background: #dc3545;
     }
-
     .toggle-btn {
       background: #007bff;
     }
-
     .toggle-btn.off {
       background: #6c757d;
     }
-
     .system-message {
       background-color: rgba(100, 65, 164, 0.1);
       padding: 4px 8px;
       border-radius: 4px;
       margin: 2px 0;
     }
-
     .system-text {
       color: #6441A4;
       font-style: italic;
     }
-
     .queue-display {
       margin-top: 15px;
       background: white;
@@ -264,12 +228,10 @@
       max-height: 200px;
       overflow-y: auto;
     }
-
     .queue-display h4 {
       margin: 0 0 10px 0;
       color: #333;
     }
-
     .queue-item {
       padding: 8px;
       border-bottom: 1px solid #f0f0f0;
@@ -278,39 +240,32 @@
       gap: 8px;
       align-items: start;
     }
-
     .queue-item:last-child {
       border-bottom: none;
     }
-
     .queue-number {
       color: #6441A4;
       font-weight: bold;
       min-width: 24px;
     }
-
     .queue-text {
       color: #333;
       word-break: break-word;
     }
-
     .empty-queue {
       color: #666;
       font-style: italic;
       text-align: center;
       padding: 10px;
     }
-
     .queue-section {
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid #e0e0e0;
     }
-
     .current-section {
       margin-bottom: 15px;
     }
-
     .current-display {
       background: white;
       border: 1px solid #e0e0e0;
@@ -318,7 +273,6 @@
       padding: 10px;
       margin-bottom: 15px;
     }
-
     .current-item {
       display: flex;
       align-items: center;
@@ -327,49 +281,41 @@
       background: #f8f9fa;
       border-radius: 4px;
     }
-
     .current-icon {
       color: #6441A4;
       font-size: 1.2em;
       animation: pulse 1s infinite;
     }
-
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.5; }
       100% { opacity: 1; }
     }
-
     .current-text {
       flex: 1;
       color: #333;
     }
-
     .current-username {
       color: #6441A4;
       font-weight: bold;
     }
-
     .empty-current {
       color: #666;
       font-style: italic;
       text-align: center;
       padding: 10px;
     }
-
     .queue-container h5,
     .current-section h5 {
       margin: 0 0 8px 0;
       color: #444;
       font-size: 0.9em;
     }
-
     .queue-username {
       color: #6441A4;
       font-weight: bold;
       margin-right: 8px;
     }
-
     /* Modal Styles */
     .modal {
       display: none;
@@ -381,7 +327,6 @@
       background: rgba(0, 0, 0, 0.5);
       z-index: 1000;
     }
-
     .modal-content {
       position: absolute;
       top: 50%;
@@ -394,37 +339,31 @@
       max-height: 80vh;
       overflow-y: auto;
     }
-
     .settings-form {
       display: flex;
       flex-direction: column;
       gap: 15px;
     }
-
     .settings-form label {
       display: flex;
       flex-direction: column;
       gap: 5px;
     }
-
     .settings-form input, .settings-form select, .settings-form textarea {
       padding: 8px;
       border: 1px solid #ddd;
       border-radius: 4px;
     }
-
     .checkbox-label {
       display: flex;
       flex-direction: row !important;
       align-items: center;
       gap: 10px;
     }
-
     .checkbox-label input[type="checkbox"] {
       width: auto;
       margin: 0;
     }
-
     .restore-btn {
       background: #ffc107;
       color: #333;
@@ -434,11 +373,9 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-
     .restore-btn:hover {
       background: #e0a800;
     }
-
     /* Custom Commands Modal Specific - Updated for a more compact UI */
     .custom-command-item {
       display: flex;
@@ -515,14 +452,11 @@
 <body>
   <div class="container">
     <h1>Twitch Chat Viewer</h1>
-    
     <div id="connect-form">
       <input type="text" id="channel-input" placeholder="Enter channel name">
       <button id="connect-btn">Connect</button>
     </div>
-
     <div id="status" class="status"></div>
-
     <div class="tts-controls">
       <h3>TTS Controls</h3>
       <div class="tts-button-group">
@@ -532,16 +466,13 @@
         <button id="gamble-settings-btn" class="control-btn toggle-btn">Gamble Settings</button>
         <button id="auto-add-user-toggle" class="control-btn toggle-btn">Auto Add User: On</button>
         <button id="custom-commands-btn" class="control-btn add-btn">Custom Commands</button>
-        <!-- New Scheduled Events Button placed to the right of Custom Commands -->
         <button id="scheduled-events-btn" class="control-btn add-btn">Scheduled Events</button>
         <button id="export-import-settings-btn" class="control-btn add-btn">Export/Import Settings</button>
       </div>
-
       <!-- Gamble Settings Modal -->
       <div id="gamble-settings-modal" class="modal">
         <div class="modal-content">
           <h4>Gamble Voice Settings</h4>
-          <!-- Warning message area for unsaved changes -->
           <div id="gamble-unsaved-warning" style="display:none; color:red; text-align:center; margin-bottom:10px;"></div>
           <div class="settings-form">
             <label class="checkbox-label">
@@ -563,7 +494,6 @@
           </div>
         </div>
       </div>
-
       <!-- Custom Commands Modal -->
       <div id="custom-commands-modal" class="modal">
         <div class="modal-content">
@@ -580,11 +510,11 @@
           </form>
         </div>
       </div>
-      
       <!-- Scheduled Events Modal -->
       <div id="scheduled-events-modal" class="modal">
         <div class="modal-content">
           <h4>Scheduled Events</h4>
+          <div id="scheduled-unsaved-warning" style="display:none; color:red; text-align:center; margin-bottom:10px;"></div>
           <button id="add-scheduled-event-btn" class="add-scheduled-event-btn">Add New Event</button>
           <div id="scheduled-events-list">
             <!-- Scheduled event items will be dynamically populated here -->
@@ -595,7 +525,6 @@
           </div>
         </div>
       </div>
-      
       <!-- Export/Import Settings Modal -->
       <div id="export-import-modal" class="modal">
         <div class="modal-content">
@@ -611,7 +540,6 @@
           </div>
         </div>
       </div>
-
       <form id="tts-add-form">
         <input type="text" id="tts-username" placeholder="Enter username for TTS">
         <select id="tts-voice-select">
@@ -619,9 +547,7 @@
         </select>
         <button type="submit" class="control-btn add-btn">Add User</button>
       </form>
-      
       <div class="tts-user-list" id="tts-users"></div>
-
       <div class="queue-section">
         <h4>TTS Status</h4>
         <div class="current-section">
@@ -638,10 +564,8 @@
         </div>
       </div>
     </div>
-
     <div id="chat-box"></div>
   </div>
-
   <script src="tmi.js"></script>
   <script src="chatUtils.js"></script>
   <script src="ttsManager.js"></script>
