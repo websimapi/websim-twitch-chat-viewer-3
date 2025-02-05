@@ -27,7 +27,7 @@
     return commands.find(cmd => cmd.trigger.toLowerCase() === trigger.toLowerCase());
   }
 
-  // Expose getCustomCommand globally so chat.js can use it
+  // Expose getCustomCommand globally so chat modules can use it
   window.getCustomCommand = getCustomCommand;
 
   // Populate the Custom Commands Modal UI with a more compact and user-friendly layout.
@@ -133,7 +133,7 @@
 
       const audioLabel = document.createElement('span');
       audioLabel.style.fontSize = '0.9em';
-      // Show current file name if available, otherwise default message
+      // Show current file name if available, otherwise a default message
       audioLabel.textContent = cmd.audioFileName ? cmd.audioFileName : (cmd.audioData ? 'File loaded' : 'No file');
       audioContainer.appendChild(audioLabel);
 
@@ -160,6 +160,11 @@
             // Store the file name for display purposes
             cmd.audioFileName = file.name;
             audioLabel.textContent = file.name;
+            // Prepare the audio for immediate use by preloading it
+            const audioSrc = Array.isArray(cmd.audioData) ? cmd.audioData.join('') : cmd.audioData;
+            const audio = new Audio(audioSrc);
+            audio.load();
+            cmd.preloadedAudio = audio;
           };
           reader.readAsDataURL(file);
         }
@@ -238,23 +243,19 @@
   window.refreshCustomCommandsUI = populateCustomCommandsUI;
   window.loadCustomCommands = loadCommands;
 
+  // New function: Preload and prepare audio files for custom commands so sounds are ready to use
+  function prepareCustomCommandAudioFiles() {
+    commands.forEach((cmd) => {
+      if (cmd.type === 'audio' && cmd.audioData) {
+        const audioSrc = Array.isArray(cmd.audioData) ? cmd.audioData.join('') : cmd.audioData;
+        const audio = new Audio(audioSrc);
+        audio.load();
+        cmd.preloadedAudio = audio;
+      }
+    });
+  }
+  window.prepareCustomCommandAudioFiles = prepareCustomCommandAudioFiles;
+
   loadCommands();
   populateCustomCommandsUI();
-
-  // Attach event listener to open the custom commands modal when the corresponding button is clicked
-  const openCustomCommandsBtn = document.getElementById('custom-commands-btn');
-  if (openCustomCommandsBtn) {
-    openCustomCommandsBtn.addEventListener('click', () => {
-      document.getElementById('custom-commands-modal').style.display = 'block';
-      populateCustomCommandsUI();
-    });
-  }
-
-  // Attach event listener to close the custom commands modal when the close button is clicked
-  const closeCustomCommandsBtn = document.getElementById('close-custom-commands');
-  if (closeCustomCommandsBtn) {
-    closeCustomCommandsBtn.addEventListener('click', () => {
-      document.getElementById('custom-commands-modal').style.display = 'none';
-    });
-  }
 })();
