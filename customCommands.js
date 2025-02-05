@@ -140,7 +140,11 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
       fileInput.accept = 'audio/*';
-      fileInput.style.fontSize = '0.9em';
+      // Make the file input icon smaller and position it to the right
+      fileInput.style.fontSize = '0.8em';
+      fileInput.style.width = '30px';
+      fileInput.style.height = '30px';
+      fileInput.style.marginLeft = 'auto';
       fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -148,9 +152,9 @@
           reader.onload = function(ev) {
             const result = ev.target.result;
             // If the base64 string is too large, split it into chunks
-            if(result.length > CHUNK_SIZE) {
+            if (result.length > CHUNK_SIZE) {
               let chunks = [];
-              for(let i = 0; i < result.length; i += CHUNK_SIZE) {
+              for (let i = 0; i < result.length; i += CHUNK_SIZE) {
                 chunks.push(result.substring(i, i + CHUNK_SIZE));
               }
               cmd.audioData = chunks;
