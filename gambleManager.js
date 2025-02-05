@@ -92,7 +92,7 @@
     if (e.target === gambleSettingsModal) {
       if (hasUnsavedChanges()) {
         if (!unsavedPrompted) {
-          unsavedWarning.textContent = "You have unsaved changes. Click 'Save Settings' to save or click outside again to cancel changes.";
+          unsavedWarning.textContent = "You have unsaved changes.";
           unsavedWarning.style.display = 'block';
           unsavedPrompted = true;
         } else {
