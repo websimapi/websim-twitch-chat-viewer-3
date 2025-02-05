@@ -222,21 +222,33 @@
     populateCustomCommandsUI();
   }
 
-  // Event listeners for modal controls
+  // Event listener for Add New Command button
   document.getElementById('add-custom-command-btn').addEventListener('click', () => {
     addNewCommand();
   });
 
+  // Event listener for Save Commands button
   document.getElementById('save-custom-commands').addEventListener('click', () => {
     saveCommands();
     alert('Custom commands saved.');
   });
 
-  // Clicking outside modal-content closes modal
-  const customModal = document.getElementById('custom-commands-modal');
-  customModal.addEventListener('click', (e) => {
-    if (e.target.closest('.modal-content')) return;
-    customModal.style.display = 'none';
+  // Modal close for Custom Commands Modal: clicking the "Close" button
+  document.getElementById('close-custom-commands').addEventListener('click', () => {
+    document.getElementById('custom-commands-modal').style.display = 'none';
+  });
+
+  // Modal open: clicking the Custom Commands button in the main UI should display the modal.
+  document.getElementById('custom-commands-btn').addEventListener('click', () => {
+    document.getElementById('custom-commands-modal').style.display = 'block';
+  });
+
+  // Clicking outside modal-content closes the modal for Custom Commands Modal
+  const customCommandsModal = document.getElementById('custom-commands-modal');
+  window.addEventListener('click', (e) => {
+    if (e.target === customCommandsModal) {
+      customCommandsModal.style.display = 'none';
+    }
   });
 
   // Expose functions globally for external updates
