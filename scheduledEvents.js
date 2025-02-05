@@ -47,6 +47,15 @@
     return new Date(val).getTime();
   }
 
+  // Trigger the scheduled event based on type
+  function triggerEvent(event) {
+    if (event.type === 'tts' && event.message) {
+      window.ttsManager.queueCustomTTSMessage(event.message, event.voice || '', 'Scheduled');
+    } else if (event.type === 'sound' && event.audioData) {
+      window.ttsManager.playCustomAudio(event.audioData);
+    }
+  }
+
   // Create or update the Scheduled Events UI inside the modal
   function populateScheduledEventsUI() {
     const listDiv = document.getElementById('scheduled-events-list');
@@ -231,25 +240,24 @@
   function checkAndExecuteScheduledEvents() {
     const now = Date.now();
     let modified = false;
-    scheduledEvents.forEach((event, index) => {
+    // Traverse backwards to handle removals safely
+    for (let i = scheduledEvents.length - 1; i >= 0; i--) {
+      const event = scheduledEvents[i];
       if (now >= event.scheduledTime) {
-        // Execute event based on type
-        if (event.type === 'tts' && event.message) {
-          window.ttsManager.queueCustomTTSMessage(event.message, event.voice || '', 'Scheduled');
-        } else if (event.type === 'sound' && event.audioData) {
-          window.ttsManager.playCustomAudio(event.audioData);
-        }
-        // Reschedule if repeatInterval is set (non-zero)
+        // Trigger the event now
+        triggerEvent(event);
         if (event.repeatInterval && event.repeatInterval > 0) {
-          event.scheduledTime += event.repeatInterval;
+          // Calculate how many intervals to skip so that scheduledTime is in the future
+          let intervalsMissed = Math.floor((now - event.scheduledTime) / event.repeatInterval) + 1;
+          event.scheduledTime += intervalsMissed * event.repeatInterval;
           modified = true;
         } else {
-          // Remove one-time event
-          scheduledEvents.splice(index, 1);
+          // One-time event; remove it
+          scheduledEvents.splice(i, 1);
           modified = true;
         }
       }
-    });
+    }
     if (modified) {
       saveScheduledEvents();
       populateScheduledEventsUI();
