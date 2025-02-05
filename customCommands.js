@@ -1,7 +1,3 @@
-// Custom Commands Module
-// This module allows users to configure custom commands that trigger either a TTS message (with a specified voice)
-// or play an uploaded audio file. The commands are stored in localStorage under the key "customCommands".
-
 (function() {
   const customCommandsKey = 'customCommands';
   let commands = [];
@@ -231,25 +227,34 @@
     alert('Custom commands saved.');
   });
 
-  // Initialize modal UI when the modal is opened
+  // Clicking outside modal-content closes modal
   const customModal = document.getElementById('custom-commands-modal');
   customModal.addEventListener('click', (e) => {
-    // Prevent propagation if clicking inside modal-content
     if (e.target.closest('.modal-content')) return;
     customModal.style.display = 'none';
   });
 
-  // When voices are loaded, populate the UI (voices might be loaded asynchronously)
-  window.speechSynthesis.onvoiceschanged = () => {
-    populateCustomCommandsUI();
-  };
+  // Expose functions globally for external updates
+  window.refreshCustomCommandsUI = populateCustomCommandsUI;
+  window.loadCustomCommands = loadCommands;
 
-  // Initial load
   loadCommands();
   populateCustomCommandsUI();
 
-  // Expose a manual refresh function if needed
-  window.refreshCustomCommandsUI = populateCustomCommandsUI;
-  // Expose loadCommands so that imported settings update custom commands in memory.
-  window.loadCustomCommands = loadCommands;
+  // Attach event listener to open the custom commands modal when the corresponding button is clicked
+  const openCustomCommandsBtn = document.getElementById('custom-commands-btn');
+  if (openCustomCommandsBtn) {
+    openCustomCommandsBtn.addEventListener('click', () => {
+      document.getElementById('custom-commands-modal').style.display = 'block';
+      populateCustomCommandsUI();
+    });
+  }
+
+  // Attach event listener to close the custom commands modal when the close button is clicked
+  const closeCustomCommandsBtn = document.getElementById('close-custom-commands');
+  if (closeCustomCommandsBtn) {
+    closeCustomCommandsBtn.addEventListener('click', () => {
+      document.getElementById('custom-commands-modal').style.display = 'none';
+    });
+  }
 })();

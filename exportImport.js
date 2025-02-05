@@ -74,6 +74,10 @@
         if (window.refreshCustomCommandsUI) {
           window.refreshCustomCommandsUI();
         }
+        // Update TTS Users UI immediately after import
+        if (window.ttsManager && window.ttsManager.loadTTSState) {
+          window.ttsManager.loadTTSState();
+        }
         alert('Settings imported successfully.');
       } catch (err) {
         alert('Failed to import settings: Invalid JSON.');
