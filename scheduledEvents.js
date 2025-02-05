@@ -30,6 +30,7 @@
     localStorage.setItem(localStorageKey, JSON.stringify(scheduledEvents));
     unsavedScheduledChanges = false;
     unsavedPromptedScheduled = false;
+    document.getElementById('scheduled-unsaved-warning').style.display = 'none';
   }
 
   function formatTimestampForInput(ts) {
@@ -258,6 +259,7 @@
     populateScheduledEventsUI();
     unsavedScheduledChanges = false;
     unsavedPromptedScheduled = false;
+    document.getElementById('scheduled-unsaved-warning').style.display = 'none';
     document.getElementById('scheduled-events-modal').style.display = 'block';
   });
 
@@ -267,6 +269,9 @@
 
   document.getElementById('save-scheduled-events').addEventListener('click', () => {
     saveScheduledEvents();
+    unsavedScheduledChanges = false;
+    unsavedPromptedScheduled = false;
+    document.getElementById('scheduled-unsaved-warning').style.display = 'none';
     document.getElementById('scheduled-events-modal').style.display = 'none';
   });
 
