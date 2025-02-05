@@ -138,7 +138,7 @@
 
   function queueTTSMessage(text, username) {
     username = username.toLowerCase();
-    if (mutedUsers.has(username)) return;
+    if (window.ttsManager.isUserMuted(username)) return;
     if (text[0] === '!' && !(window.gambleManager && window.gambleManager.isGambleTrigger(text.toLowerCase()))) {
       return;
     }
@@ -258,7 +258,7 @@
           }).join('')}
         </select>
       `;
-      const isMuted = mutedUsers.has(username);
+      const isMuted = window.ttsManager.isUserMuted(username);
       const muteButtonHTML = `<button onclick="window.ttsManager.toggleMuteUser('${username}')" class="control-btn ${isMuted ? 'toggle-btn off' : 'toggle-btn'}">${isMuted ? 'Unmute' : 'Mute'}</button>`;
       div.innerHTML = `
         <span>${username}</span>
@@ -274,11 +274,17 @@
     username = username.toLowerCase();
     if (mutedUsers.has(username)) {
       mutedUsers.delete(username);
+      window.chatUI.addSystemMessage(`${username} has unmuted themselves.`);
     } else {
       mutedUsers.add(username);
+      window.chatUI.addSystemMessage(`${username} has muted themselves.`);
     }
     saveMutedUsers();
     updateTTSUsersList();
+  }
+  
+  function isUserMuted(username) {
+    return mutedUsers.has(username.toLowerCase());
   }
 
   setInterval(function() {
@@ -359,6 +365,7 @@
     removeTTSUser: removeTTSUser,
     updateUserVoice: updateUserVoice,
     updateTTSUsersList: updateTTSUsersList,
-    toggleMuteUser: toggleMuteUser
+    toggleMuteUser: toggleMuteUser,
+    isUserMuted: isUserMuted
   };
 })();

@@ -46,6 +46,26 @@
     client.on('message', function(channel, tags, message, self) {
       const username = tags['display-name'] || 'Anonymous';
       const lowerMessage = message.trim().toLowerCase();
+      
+      // Check for self mute/unmute commands if allowed
+      const allowSelfMute = localStorage.getItem('allowSelfMute') === 'false' ? false : true;
+      if (allowSelfMute) {
+        const muteCommands = (localStorage.getItem('selfMuteCommands') || '!tts-off, !mute, bonesd3to').toLowerCase().split(',').map(s => s.trim());
+        const unmuteCommands = (localStorage.getItem('selfUnmuteCommands') || '!tts, !tts-on, !unmute, bonesd3ts').toLowerCase().split(',').map(s => s.trim());
+        if (muteCommands.includes(lowerMessage)) {
+          if (!window.ttsManager.isUserMuted(username)) {
+            window.ttsManager.toggleMuteUser(username);
+          }
+          return; // Do not process further
+        }
+        if (unmuteCommands.includes(lowerMessage)) {
+          if (window.ttsManager.isUserMuted(username)) {
+            window.ttsManager.toggleMuteUser(username);
+          }
+          return; // Do not process further
+        }
+      }
+      
       if (window.getCustomCommand) {
         const customCmd = window.getCustomCommand(lowerMessage);
         if (customCmd) {

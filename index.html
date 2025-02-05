@@ -108,9 +108,6 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
-    .toggle-btn.off {
-      background: #6c757d;
-    }
     .tts-user-list {
       margin-top: 15px;
       display: grid;
@@ -208,6 +205,9 @@
     }
     .toggle-btn {
       background: #007bff;
+    }
+    .toggle-btn.off {
+      background: #6c757d;
     }
     .system-message {
       background-color: rgba(100, 65, 164, 0.1);
@@ -461,9 +461,11 @@
         <button id="tts-clear-queue" class="control-btn clear-btn">Clear TTS Queue</button>
         <button id="tts-filter-toggle" class="control-btn toggle-btn">Filter Enabled</button>
         <button id="gamble-settings-btn" class="control-btn toggle-btn">Gamble Settings</button>
-        <button id="mute-settings-btn" class="control-btn add-btn">Mute Settings</button>
+        <button id="auto-add-user-toggle" class="control-btn toggle-btn">Auto Add User: On</button>
+        <button id="custom-commands-btn" class="control-btn add-btn">Custom Commands</button>
         <button id="scheduled-events-btn" class="control-btn add-btn">Scheduled Events</button>
         <button id="export-import-settings-btn" class="control-btn add-btn">Export/Import Settings</button>
+        <button id="mute-settings-btn" class="control-btn add-btn">Mute Settings</button>
       </div>
       <div id="gamble-settings-modal" class="modal">
         <div class="modal-content">
@@ -485,30 +487,6 @@
             <div style="display: flex; gap:10px; flex-wrap: wrap;">
               <button id="save-gamble-settings" class="control-btn add-btn">Save Settings</button>
               <button id="restore-gamble-defaults" class="restore-btn">Restore Default Triggers</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="mute-settings-modal" class="modal">
-        <div class="modal-content">
-          <h4>Mute Settings</h4>
-          <div id="mute-unsaved-warning" style="display:none; color:red; text-align:center; margin-bottom:10px;"></div>
-          <div class="settings-form">
-            <label class="checkbox-label">
-              Allow Users to Mute/Unmute Themselves:
-              <input type="checkbox" id="allow-self-mute">
-            </label>
-            <label>
-              Default On Commands (comma separated):
-              <input type="text" id="default-on-commands" placeholder="e.g., !tts, !tts-on, !unmute, bonesd3TS">
-            </label>
-            <label>
-              Default Off Commands (comma separated):
-              <input type="text" id="default-off-commands" placeholder="e.g., !tts-off, !mute, bonesd3TO">
-            </label>
-            <div style="display: flex; gap:10px; flex-wrap: wrap;">
-              <button id="save-mute-settings" class="control-btn add-btn">Save Settings</button>
-              <button id="close-mute-settings" class="control-btn clear-btn">Close</button>
             </div>
           </div>
         </div>
@@ -549,6 +527,29 @@
           </div>
           <div style="text-align:right;">
             <button id="close-export-import-btn" class="control-btn clear-btn">Close</button>
+          </div>
+        </div>
+      </div>
+      <div id="mute-settings-modal" class="modal">
+        <div class="modal-content">
+          <h4>Mute Settings</h4>
+          <div class="settings-form">
+            <label class="checkbox-label">
+              Allow Self Mute Commands:
+              <input type="checkbox" id="allow-self-mute-toggle">
+            </label>
+            <label>
+              Default Unmute Commands (comma separated):
+              <input type="text" id="self-unmute-commands" placeholder="e.g., !tts, !tts-on, !unmute, bonesd3TS">
+            </label>
+            <label>
+              Default Mute Commands (comma separated):
+              <input type="text" id="self-mute-commands" placeholder="e.g., !tts-off, !mute, bonesd3TO">
+            </label>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button id="save-mute-settings" class="control-btn add-btn">Save Settings</button>
+              <button id="close-mute-settings" class="control-btn clear-btn">Close</button>
+            </div>
           </div>
         </div>
       </div>
