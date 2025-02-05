@@ -24,6 +24,8 @@
       alert('Please enter a channel name');
       return;
     }
+    // Save the channel to localStorage for auto-connection next time
+    localStorage.setItem('lastConnectedChannel', channel);
     client = new window.tmi.Client({
       connection: {
         secure: true,
@@ -72,6 +74,15 @@
       client = null;
     }
   }
+
+  // On page load, auto connect if a last connected channel is stored
+  window.addEventListener('DOMContentLoaded', function() {
+    const lastChannel = localStorage.getItem('lastConnectedChannel');
+    if (lastChannel) {
+      channelInput.value = lastChannel;
+      connectToChat();
+    }
+  });
 
   window.chatClient = {
     connectToChat: connectToChat,
