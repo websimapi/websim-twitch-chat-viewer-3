@@ -108,6 +108,9 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
+    .toggle-btn.off {
+      background: #6c757d;
+    }
     .tts-user-list {
       margin-top: 15px;
       display: grid;
@@ -205,9 +208,6 @@
     }
     .toggle-btn {
       background: #007bff;
-    }
-    .toggle-btn.off {
-      background: #6c757d;
     }
     .system-message {
       background-color: rgba(100, 65, 164, 0.1);
@@ -461,8 +461,7 @@
         <button id="tts-clear-queue" class="control-btn clear-btn">Clear TTS Queue</button>
         <button id="tts-filter-toggle" class="control-btn toggle-btn">Filter Enabled</button>
         <button id="gamble-settings-btn" class="control-btn toggle-btn">Gamble Settings</button>
-        <button id="auto-add-user-toggle" class="control-btn toggle-btn">Auto Add User: On</button>
-        <button id="custom-commands-btn" class="control-btn add-btn">Custom Commands</button>
+        <button id="mute-settings-btn" class="control-btn add-btn">Mute Settings</button>
         <button id="scheduled-events-btn" class="control-btn add-btn">Scheduled Events</button>
         <button id="export-import-settings-btn" class="control-btn add-btn">Export/Import Settings</button>
       </div>
@@ -486,6 +485,30 @@
             <div style="display: flex; gap:10px; flex-wrap: wrap;">
               <button id="save-gamble-settings" class="control-btn add-btn">Save Settings</button>
               <button id="restore-gamble-defaults" class="restore-btn">Restore Default Triggers</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="mute-settings-modal" class="modal">
+        <div class="modal-content">
+          <h4>Mute Settings</h4>
+          <div id="mute-unsaved-warning" style="display:none; color:red; text-align:center; margin-bottom:10px;"></div>
+          <div class="settings-form">
+            <label class="checkbox-label">
+              Allow Users to Mute/Unmute Themselves:
+              <input type="checkbox" id="allow-self-mute">
+            </label>
+            <label>
+              Default On Commands (comma separated):
+              <input type="text" id="default-on-commands" placeholder="e.g., !tts, !tts-on, !unmute, bonesd3TS">
+            </label>
+            <label>
+              Default Off Commands (comma separated):
+              <input type="text" id="default-off-commands" placeholder="e.g., !tts-off, !mute, bonesd3TO">
+            </label>
+            <div style="display: flex; gap:10px; flex-wrap: wrap;">
+              <button id="save-mute-settings" class="control-btn add-btn">Save Settings</button>
+              <button id="close-mute-settings" class="control-btn clear-btn">Close</button>
             </div>
           </div>
         </div>
@@ -562,6 +585,7 @@
   <script src="customCommands.js"></script>
   <script src="exportImport.js"></script>
   <script src="scheduledEvents.js"></script>
+  <script src="muteSettings.js"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
